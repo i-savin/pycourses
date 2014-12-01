@@ -11,7 +11,7 @@ nums = raw_input();
 nums = map(int, nums.split(','));
 # print nums;
 
-packed = pack(len(nums)*'l', *nums);
-result = unpack(len(nums)*'l', packed[::-1]);
+packed = pack(len(nums)*'i', *nums);
+result = [i for i in unpack(len(nums)*'i', packed[::-1])];
 
 print result;
