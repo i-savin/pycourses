@@ -9,6 +9,63 @@
 #  1, 3, 2, 2, 4, 4
 # Output:
 #  YES
+def shift(l):
+    return l[1:] + l[:1]
+
+
+chain = map(int, raw_input().split(','));
+half_perimiter = sum(chain) / 2;
+n = len(chain);
+if n < 4 or not sum(chain) % 2 == 0:
+    print 'NO';
+else:
+    finish = False;
+    while n >= 0 and not finish:
+        chain = shift(chain);
+        n -= 1;
+        sides = [0,0,0,0]
+        index = 0;
+        for i in chain:
+            sides[0] += i;
+            # print 'sides[0]=', sides[0];
+            index += 1;
+            # print sides;
+            # print sides_indexes;
+            if sides[0] < half_perimiter:
+                f_index = index
+                for j in chain[f_index:]:
+                    sides[1] += j;
+                    f_index += 1;
+                    if sides[1] + sides[0] >= half_perimiter:
+                        break;
+                if sides[0]+sides[1] == half_perimiter:
+                    for k in chain[f_index:]:
+                        sides[2] += k;
+                        f_index += 1;
+                        if sides[2] >= sides[0]:
+                            break;
+                    if sides[2] == sides[0]:
+                        sides[3] = sum(chain[f_index:]);
+                        # print 'sides[3]=', sides[3];
+                        if sides[3] <= sides[1]:
+                            finish = True;
+                        else:
+                            sides[1] = sides[2] = sides[3] = 0;
+                    else:
+                        sides[1] = sides[2] = sides[3] = 0;
+                else:
+                    sides[1] = sides[2] = sides[3] = 0;
+            else:
+                break;
+            if finish:
+                break;
+    # print sides;
+    if all(sides) and sides[1] == sides[3]:
+        print 'YES';
+    else:
+        print 'NO';
+
+
 # Попробуем решать так:
 # [0,0,0,0] - массив длин сторон (нули - начальные значения)
 # [0,1,2,3] - массив индексов начала каждой их сторон (0,1,2,3) - начальные значения
