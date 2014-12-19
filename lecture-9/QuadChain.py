@@ -9,85 +9,66 @@
 #  1, 3, 2, 2, 4, 4
 # Output:
 #  YES
-def shift(l):
-    return l[1:] + l[:1]
+import sys;
+
+def shift(l,n):
+    return l[n:] + l[:n]
 
 
 chain = map(int, raw_input().split(','));
 half_perimiter = sum(chain) / 2;
-n = len(chain);
-if n < 4 or not sum(chain) % 2 == 0:
+n = len(chain) / 2;
+# print n;
+max_index = chain.index(max(chain));
+
+chain = shift(chain, max_index);
+
+if len(chain) < 4 or not sum(chain) % 2 == 0:
     print 'NO';
-else:
-    finish = False;
-    while n >= 0 and not finish:
-        chain = shift(chain);
-        n -= 1;
-        sides = [0,0,0,0]
-        index = 0;
-        for i in chain:
-            sides[0] += i;
-            # print 'sides[0]=', sides[0];
-            index += 1;
-            # print sides;
-            # print sides_indexes;
-            if sides[0] < half_perimiter:
-                f_index = index
-                for j in chain[f_index:]:
-                    sides[1] += j;
+    sys.exit();
+
+finish = False;
+while n >= 0 and not finish:
+    chain = shift(chain, 1);
+    n -= 1;
+    sides = [0,0,0,0]
+    index = 0;
+    for i in chain:
+        sides[0] += i;
+        # print 'sides[0]=', sides[0];
+        index += 1;
+        # print sides;
+        # print sides_indexes;
+        if sides[0] < half_perimiter:
+            f_index = index
+            for j in chain[f_index:]:
+                sides[1] += j;
+                f_index += 1;
+                if sides[1] + sides[0] >= half_perimiter:
+                    break;
+            if sides[0]+sides[1] == half_perimiter:
+                for k in chain[f_index:]:
+                    sides[2] += k;
                     f_index += 1;
-                    if sides[1] + sides[0] >= half_perimiter:
+                    if sides[2] >= sides[0]:
                         break;
-                if sides[0]+sides[1] == half_perimiter:
-                    for k in chain[f_index:]:
-                        sides[2] += k;
-                        f_index += 1;
-                        if sides[2] >= sides[0]:
-                            break;
-                    if sides[2] == sides[0]:
-                        sides[3] = sum(chain[f_index:]);
-                        # print 'sides[3]=', sides[3];
-                        if sides[3] <= sides[1]:
-                            finish = True;
-                        else:
-                            sides[1] = sides[2] = sides[3] = 0;
+                if sides[2] == sides[0]:
+                    sides[3] = sum(chain[f_index:]);
+                    # print 'sides[3]=', sides[3];
+                    if sides[3] <= sides[1]:
+                        finish = True;
                     else:
                         sides[1] = sides[2] = sides[3] = 0;
                 else:
                     sides[1] = sides[2] = sides[3] = 0;
             else:
-                break;
-            if finish:
-                break;
-    # print sides;
-    if all(sides) and sides[1] == sides[3]:
-        print 'YES';
-    else:
-        print 'NO';
-
-
-# Попробуем решать так:
-# [0,0,0,0] - массив длин сторон (нули - начальные значения)
-# [0,1,2,3] - массив индексов начала каждой их сторон (0,1,2,3) - начальные значения
-# Формируем первую сторону:
-# прибавляем к элементу массиву [0] по очереди элементы цепи и увеличиваем 
-# индексы сторон на один. На каждом этапе проверяем, чтобы длина стороны не превзошла
-# полупериметр и если не превосходит, переходим ко второй стороне. Если превосходит,
-# выводим НЕТ.
-# Формируем вторую сторону:
-# прибавляем к элементу массива [1] по очереди элементы цепи и увеличиваем
-# индексы на один. На каждом этапе сравниваем текущую длину цепи с полупериметром.
-# Если сумма меньше, добавляем еще один элемент, если больше, возвращаемся к первой стороне
-# (обнулив вторую сторону, текущую длину цепи вернув к длине первой стороны, уменьшив
-# индексы второй и последующей сторон),
-# если равна, фиксируем сторону и переходим к третьей стороне.
-# Формируем четвертую сторону:
-# прибавляем к элементу массива [2] по очереди элменты цепи и увеличиваем 
-# индексы на один. На каждом этапе сравниваем длину третьей стороны с длиной
-# первой стороны. Если меньше, продложаем увеличивать, если равна, переходим к
-# четвертой стороне, если больше - обнуляем вторую и третью стороны, сбрасываем индексы
-# относительно первой стороны, сбрасывем текущую длину и переходим к первой стороне.
-# Формируем четвертую сторону:
-# суммируем оставшиеся элементы. Если сумма равна длине второй стороны, выводим ДА, если
-# меньше, выводим НЕТ, если больше - сбрасываем вторую, третью и четвертую стороны, их индексы,
-# текущую длину цепи и возвращаемся к первой стороне.
+                sides[1] = sides[2] = sides[3] = 0;
+        else:
+            break;
+        if finish:
+            break;
+# print sides;
+if all(sides) and sides[1] == sides[3]:
+    print 'YES';
+else:
+    print 'NO';
